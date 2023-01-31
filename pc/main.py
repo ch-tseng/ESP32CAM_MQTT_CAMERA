@@ -1,7 +1,9 @@
 import paho.mqtt.client as mqtt
 import cv2
+import json
 import os, time
 import keyboard
+import threading
 from configparser import ConfigParser
 import ast
 
@@ -9,26 +11,33 @@ cfg = ConfigParser()
 cfg.read("config.ini",encoding="utf-8")
 
 def on_connect(client, userdata, flags, rc):
-    print("Connected with result code "+str(rc))
-    client.subscribe( cfg.get("MQTT","MQTT_SUB_TOPIC") )
+    for topic_sub in ast.literal_eval(cfg.get("MQTT", "MQTT_SUB_TOPIC")):
+        print("Subscribe to", topic_sub)
+        client.subscribe(topic_sub)
 
-# 當接收到從伺服器發送的圖片後，儲存下來接著顯示10秒鐘後再關閉視窗。
-def on_message(client, userdata, msg):   
+def display_msg(cid, img):
     if not os.path.exists('recv'): os.makedirs('recv')
 
-    saved_path = 'recv/{}.jpg'.format(str(time.time()))
-    f = open(saved_path, "wb")
-    f.write(msg.payload)
-    print("Image Received")
-    f.close()
-    img = cv2.imread(saved_path)
-    print(img.shape)
-    cv2.imshow('test', img)
-    cv2.waitKey(10000)
-    cv2.destroyWindow("test")
+    win_name = str(cid)
+    saved_path = 'recv/{}#{}.jpg'.format(cid,str(time.time()))
+    
+    with open(saved_path, "wb") as f:
+        f.write(img)
+    
+    cv2.imshow(win_name, cv2.imread(saved_path))     
+    # 當接收到從伺服器發送的圖片後，儲存下來接著顯示15秒鐘後再關閉視窗。         
+    cv2.waitKey(15000)    
+    cv2.destroyWindow(win_name)  
 
     if cfg.getboolean("GLOBAL","save_local") is False:
         os.remove(saved_path)
+
+    
+
+def on_message(client, userdata, msg):    
+    print('received msg')
+    t = threading.Thread(target=display_msg, args=(msg.topic, msg.payload,))
+    t.start()
 
 client = mqtt.Client()
 client.on_connect = on_connect
@@ -49,5 +58,6 @@ while True:
             client.publish(cfg.get("MQTT","MQTT_PUB_TOPIC"), cfg.get("GLOBAL", "txt_take_flash_pic"))
             print('Send MQTT to take picture with flash.')
             last_pressed = time.time()
+
 
 client.loop_stop()    
