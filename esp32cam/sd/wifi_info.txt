@@ -1,12 +1,12 @@
-WIFI_AP:meshCH
-WIFI_PWD:0963355729
+WIFI_AP:xxxx
+WIFI_PWD:xxxxxxx
 MQTT_HOST:test.mosquitto.org
 MQTT_PORT:1883
 MQTT_USR:
 MQTT_PWD:
 MQTT_SUB_TOPIC:CMDS_for_MQTT
 MQTT_PUB_TOPIC:IMGS_for_MQTT
-CAM_NAME:ESP32Cam
+CAM_NAME:ESP32Cam01
 SAVE_TO_SD:0
 txt_take_pic:Take-Picture
 txt_take_flash_pic:Take-Picture-Flash
