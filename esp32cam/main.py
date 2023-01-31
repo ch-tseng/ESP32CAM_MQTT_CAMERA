@@ -9,7 +9,7 @@ mount_sd()
 #file.write( "TsengChengHsun (6125)\n")
 #file.write( "iwanttosee\n")
 #file.write( "Redmi\n")
-#file.write( "hospital\n")
+#file.write( "hospital\n")MicroPython device
 #file.close()
 
 
@@ -18,18 +18,18 @@ with open(file_path, 'r') as f:
     lines = f.readlines()
 
 if len(lines)>=12:
-    WIFI_AP = lines[0].replace('\n','').replace('\r','').split(':')[1]
-    WIFI_PWD = lines[1].replace('\n','').replace('\r','').split(':')[1]
-    MQTT_HOST = lines[2].replace('\n','').replace('\r','').split(':')[1]
+    WIFI_AP = lines[0].replace('\n','').replace('\r','').split(':')[1].strip()
+    WIFI_PWD = lines[1].replace('\n','').replace('\r','').split(':')[1].strip()
+    MQTT_HOST = lines[2].replace('\n','').replace('\r','').split(':')[1].strip()
     MQTT_PORT = int(lines[3].replace('\n','').replace('\r','').split(':')[1])
-    MQTT_USR = lines[4].replace('\n','').replace('\r','').split(':')[1]
-    MQTT_PWD = lines[5].replace('\n','').replace('\r','').split(':')[1]
-    MQTT_SUB_TOPIC = lines[6].replace('\n','').replace('\r','').split(':')[1]
-    MQTT_PUB_TOPIC = lines[7].replace('\n','').replace('\r','').split(':')[1]
-    CAM_NAME = lines[8].replace('\n','').replace('\r','').split(':')[1]
-    SAVE_TO_SD = lines[9].replace('\n','').replace('\r','').split(':')[1]
-    txt_take_pic = lines[10].replace('\n','').replace('\r','').split(':')[1]
-    txt_take_flash_pic = lines[11].replace('\n','').replace('\r','').split(':')[1]
+    MQTT_USR = lines[4].replace('\n','').replace('\r','').split(':')[1].strip()
+    MQTT_PWD = lines[5].replace('\n','').replace('\r','').split(':')[1].strip()
+    MQTT_SUB_TOPIC = lines[6].replace('\n','').replace('\r','').split(':')[1].strip()
+    MQTT_PUB_TOPIC = lines[7].replace('\n','').replace('\r','').split(':')[1].strip()
+    CAM_NAME = lines[8].replace('\n','').replace('\r','').split(':')[1].strip()
+    SAVE_TO_SD = lines[9].replace('\n','').replace('\r','').split(':')[1].strip()
+    txt_take_pic = lines[10].replace('\n','').replace('\r','').split(':')[1].strip()
+    txt_take_flash_pic = lines[11].replace('\n','').replace('\r','').split(':')[1].strip()
     print('MQTT_SUB_TOPIC', MQTT_SUB_TOPIC)
     conn_status = retry_wifi_connect(WIFI_AP, WIFI_PWD, retry=5, wait=3)
     print('conn_status', conn_status)

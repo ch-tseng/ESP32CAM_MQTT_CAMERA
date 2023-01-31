@@ -25,6 +25,7 @@ class MQTT:
         client.set_callback(self.mqtt_get_msg)
         
         self.host = host
+        self.cid = cid
         self.pub_topic = pub_topic
         self.client = client
         self.objCam = objCam
@@ -67,6 +68,10 @@ class MQTT:
             self.client.ping()
             print('ping', self.host )
             
-        self.client.check_msg()
-        #except:
-        #    print('MQTT ping and check msg error!')
+        try:
+            self.client.check_msg()
+        except OSError as e:
+            print("reconnecting...")
+            client.connect(False) # 記得要指定 False
+            client.set_callback(self.mqtt_get_msg)
+            print("reconected.")
