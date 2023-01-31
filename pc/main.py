@@ -26,7 +26,7 @@ def display_msg(cid, img):
     
     cv2.imshow(win_name, cv2.imread(saved_path))     
     # 當接收到從伺服器發送的圖片後，儲存下來接著顯示15秒鐘後再關閉視窗。         
-    cv2.waitKey(15000)    
+    cv2.waitKey(cfg.getint("GLOBAL","seconds_display"))    
     cv2.destroyWindow(win_name)  
 
     if cfg.getboolean("GLOBAL","save_local") is False:
