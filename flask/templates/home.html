@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="refresh" content="5" />
+    <title>MQTT Camera</title>
+</head>
+<body>
+<h1>ESP32Cam MQTT Camera</h1>
+<form method="POST" action="pub" name="form_take_pic" id="form_take_pic">
+    <label for="p_type">Take a picture</label>
+    <select name="p_type" id="p_type">
+       <option value="Take-Picture">No Flash</option>
+       <option value="Take-Picture-Flash">With Flash</option>
+    </select>
+    <input type="submit" value="Submit">
+</form>
+<hr>
+<img src="{{url_for('static', filename='recv.jpg')}}">
+</body>
+</html>
