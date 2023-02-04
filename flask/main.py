@@ -2,6 +2,7 @@
 from flask import Flask, request, jsonify, render_template, redirect, url_for
 from flask_mqtt import Mqtt
 import time
+import binascii
 
 app = Flask(__name__)
 
@@ -26,14 +27,13 @@ def handle_connect(client, userdata, flags, rc):
 
 @mqtt_client.on_message()
 def handle_mqtt_message(client, userdata, message):
-   data = dict(
-       topic=message.topic,
-       #payload=message.payload.decode()
-       payload=message.payload
-   )
-   print('Received message on topic: {topic} with payload: {payload}'.format(**data))
+   data_rcv = json.loads(message.payload)
+   cam_name = data_rcv["client"]
+   print("Received image from",cam_name)
+   img = binascii.a2b_base64(data_rcv["image"])
+   
    with open('static/recv.jpg', "wb") as f:
-       f.write(message.payload)
+       f.write(img)
 
 @app.route('/')
 def home():
