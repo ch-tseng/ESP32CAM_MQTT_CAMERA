@@ -6,6 +6,7 @@ import keyboard
 import threading
 from configparser import ConfigParser
 import ast
+import binascii
 
 cfg = ConfigParser()
 cfg.read("config.ini",encoding="utf-8")
@@ -15,11 +16,12 @@ def on_connect(client, userdata, flags, rc):
         print("Subscribe to", topic_sub)
         client.subscribe(topic_sub)
 
-def display_msg(cid, img):
-    if not os.path.exists('recv'): os.makedirs('recv')
+def display_msg(client_name, img):
+    save_folder = os.path.join('recv', client_name)
+    if not os.path.exists( save_folder): os.makedirs(save_folder)
 
-    win_name = str(cid)
-    saved_path = 'recv/{}#{}.jpg'.format(cid,str(time.time()))
+    win_name = client_name
+    saved_path = os.path.join(save_folder, '{}.jpg'.format(str(time.time())))
     
     with open(saved_path, "wb") as f:
         f.write(img)
@@ -36,7 +38,12 @@ def display_msg(cid, img):
 
 def on_message(client, userdata, msg):    
     print('received msg')
-    t = threading.Thread(target=display_msg, args=(msg.topic, msg.payload,))
+    data_rcv = json.loads(msg.payload)
+    cam_name = data_rcv["client"]
+    print('client', client)
+    img = binascii.a2b_base64(data_rcv["image"])
+    #print("client", client)
+    t = threading.Thread(target=display_msg, args=(cam_name, img, ))
     t.start()
 
 client = mqtt.Client()
