@@ -6,7 +6,7 @@ import binascii
 
 app = Flask(__name__)
 
-app.config['MQTT_BROKER_URL'] = 'test.mosquitto.org'
+app.config['MQTT_BROKER_URL'] = 'broker.hivemq.com'
 app.config['MQTT_BROKER_PORT'] = 1883
 app.config['MQTT_USERNAME'] = ''  # Set this item when you need to verify username and password
 app.config['MQTT_PASSWORD'] = ''  # Set this item when you need to verify username and password
