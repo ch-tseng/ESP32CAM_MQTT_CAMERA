@@ -12,8 +12,8 @@ app.config['MQTT_USERNAME'] = ''  # Set this item when you need to verify userna
 app.config['MQTT_PASSWORD'] = ''  # Set this item when you need to verify username and password
 app.config['MQTT_KEEPALIVE'] = 5  # Set KeepAlive time in seconds
 app.config['MQTT_TLS_ENABLED'] = False  # If your server supports TLS, set it True
-s_topic = 'IMGS_for_MQTT'
-r_topic = 'CMDS_for_MQTT'
+s_topic = 'IMGS_MQTT'
+r_topic = 'CMDS_MQTT'
 
 mqtt_client = Mqtt(app)
 
