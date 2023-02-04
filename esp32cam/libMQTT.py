@@ -1,14 +1,16 @@
 from umqtt.robust import MQTTClient
 import uos
 import time
+from json import dumps
+import binascii
 
 class MQTT:
-    def __init__(self, pub_topic, cid, host, mqttport, user, pwd, keeplive=5, save_file='0', txtTake='Take-Picture', \
+    def __init__(self, pub_topic, cid, host, mqttport, user, pwd, keeplive=30, save_file='0', txtTake='Take-Picture', \
                  txtFTake='Take-Picture-Flash', objCam=None ):
         if user != '' and pwd != '':
             client = MQTTClient(
                 client_id=cid, 
-                keepalive=5,
+                keepalive=keeplive,
                 server=host,
                 port=mqttport,
                 user=user,
@@ -49,8 +51,11 @@ class MQTT:
                 fileContent = f.read()
                 
             byteArr = bytearray(fileContent)
+            
+            jsondata = { "client":self.cid, "image":binascii.b2a_base64(byteArr).decode() }
 
-            self.publish(topic=self.pub_topic, msg=byteArr)
+            self.publish(topic=self.pub_topic, msg=dumps(jsondata))
+            print('Image sent')
             
             if self.save_file == '0':
                 uos.remove(img_path)
@@ -63,7 +68,7 @@ class MQTT:
         
     def check_msg(self):
         #try:
-        if time.time() - self.last_ping > 30:
+        if time.time() - self.last_ping > 20:
             self.last_ping = time.time()
             self.client.ping()
             print('ping', self.host )

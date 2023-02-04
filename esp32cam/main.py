@@ -27,20 +27,23 @@ if len(lines)>=12:
     MQTT_SUB_TOPIC = lines[6].replace('\n','').replace('\r','').split(':')[1].strip()
     MQTT_PUB_TOPIC = lines[7].replace('\n','').replace('\r','').split(':')[1].strip()
     CAM_NAME = lines[8].replace('\n','').replace('\r','').split(':')[1].strip()
-    SAVE_TO_SD = lines[9].replace('\n','').replace('\r','').split(':')[1].strip()
-    txt_take_pic = lines[10].replace('\n','').replace('\r','').split(':')[1].strip()
-    txt_take_flash_pic = lines[11].replace('\n','').replace('\r','').split(':')[1].strip()
+    FRAME_SIZE = int(lines[9].replace('\n','').replace('\r','').split(':')[1].strip())
+    SAVE_TO_SD = lines[10].replace('\n','').replace('\r','').split(':')[1].strip()
+    txt_take_pic = lines[11].replace('\n','').replace('\r','').split(':')[1].strip()
+    txt_take_flash_pic = lines[12].replace('\n','').replace('\r','').split(':')[1].strip()
+    RETRY_WIFI_CONNECT = int(lines[13].replace('\n','').replace('\r','').split(':')[1].strip())
+    FLASH_COUNT_CONNECTED = int(lines[14].replace('\n','').replace('\r','').split(':')[1].strip())
     print('MQTT_SUB_TOPIC', MQTT_SUB_TOPIC)
-    conn_status = retry_wifi_connect(WIFI_AP, WIFI_PWD, retry=5, wait=3)
+    conn_status = retry_wifi_connect(WIFI_AP, WIFI_PWD, retry=RETRY_WIFI_CONNECT, wait=3)
     print('conn_status', conn_status)
     
     if conn_status is True:        
     
-        cam = CAMERA()        
-        cam.led_flash(count=3, ftime=(0.15,0.25))
+        cam = CAMERA(framesize=FRAME_SIZE)        
+        cam.led_flash(count=FLASH_COUNT_CONNECTED, ftime=(0.15,0.25))
             
         mqtt = MQTT(pub_topic=MQTT_PUB_TOPIC, cid=CAM_NAME, host=MQTT_HOST, mqttport=MQTT_PORT, user=MQTT_USR, \
-                    pwd=MQTT_PWD, keeplive=5, save_file=SAVE_TO_SD, \
+                    pwd=MQTT_PWD, keeplive=30, save_file=SAVE_TO_SD, \
                     txtTake=txt_take_pic, txtFTake=txt_take_flash_pic, objCam=cam) 
         mqtt.subscribe(topic=MQTT_SUB_TOPIC)
         
