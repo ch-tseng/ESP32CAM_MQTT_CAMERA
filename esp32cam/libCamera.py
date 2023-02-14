@@ -9,13 +9,14 @@ from machine import SDCard
 led = Pin(4, Pin.OUT)
 
 class CAMERA:
-    def __init__(self, framesize=10, save_path='/sd/'):
+    def __init__(self, framesize=10, save_path='/sd/', debug='1'):
         camera.init()
         camera.framesize(framesize)     # frame size 10: 800X600 (1.33 espect ratio)
         camera.contrast(2)       # increase contrast
         camera.speffect(0)       # 0-->color , 2 -->jpeg grayscale
         
         self.save_path = save_path
+        self.debug = debug
         
     def get_img(self, flash='0'):
         if flash=='1':
@@ -49,7 +50,6 @@ class CAMERA:
             
         now_file = '-'.join([ str(x) for x in nowtime[:6] ]) + '.jpg'
         now_path = self.save_path + now_file
-        print(now_path)
         uos.chdir('/sd')
         uos.listdir()
             
